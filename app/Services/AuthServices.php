@@ -8,7 +8,7 @@ class AuthServices extends Api {
     public function postLogin($param){
         
         $api = new Api();
-        $response = $api->post('auth/login', $param);
+        $response = $api->post('set-account', $param);
         
         // dd($response);
         if($response['status'] == true){

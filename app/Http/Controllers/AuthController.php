@@ -22,15 +22,20 @@ class AuthController extends Controller
     public function login(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'nik' => 'required|numeric',
+            'nik' => 'required',
             'no_rm' => 'required',
         ]);
+
+        $param = [
+            'username' => $request->nik,
+            'password' => $request->no_rm
+        ];
 
         if($validator->fails()){
             return back()->withErrors($validator->errors()->first());
         }
 
-        $response = $this->authServices->postLogin($request->all());
+        $response = $this->authServices->postLogin($param);
         // dd($response);
 
         if($response['status'] == true){
