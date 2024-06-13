@@ -28,6 +28,11 @@
                             <form method="POST" action="#" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="list_email[]" id="list_email">
+                                <input type="hidden" name="email_id" value="{{ $response['id'] }}">
+                                <div class="form-group">
+                                    <label for="body">Email </label>
+                                    <input type="email" class="form-control" id="sender" name="email"  placeholder="masukkan email" value="{{ $response['email'] }}" rows="4">
+                                </div>
                                 <div class="form-group">
                                     <label for="brief_description">Logo <span class="text-danger">*</span></label>
                                     <select name="logo" id="" class="form-control" required>
@@ -72,11 +77,11 @@
             
                                 </div>
             
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="file_document">File import email excel <span class="text-danger">*</span></label>
                                     <input type="file" name="file" class="form-control" id="fileUpload" required>
             
-                                </div>
+                                </div> --}}
                                 
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>

@@ -30,7 +30,8 @@ class EmailController extends Controller
         return view('pages.broadcast.email.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // dd($request->all());
 
         $listMail = explode(',', $request->list_email[0]);
@@ -112,5 +113,55 @@ class EmailController extends Controller
             'response' => $response['data']
         ]);
     }
+
+    public function update(Request $request)
+    {
+        // dd($request->all());
+
+        // $listMail = explode(',', $request->list_email[0]);
+
+        // $validMail = [];
+        // // $email = "abc123@sdsd.com"; 
+        // $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'; 
+
+        // foreach($listMail as $mail){
+        //     if (preg_match($regex, $mail)) {
+        //         $validMail[] = $mail;
+        //     }
+        // }
+        // dd($validMail);
+        // $data = $request->all();
+
+        // $excelFile = $request->file('file');
+        // $filePath = $excelFile->getRealPath();
+        // $base64 = $this->excelToBase64($filePath);
+
+        // dd($base64);
+        
+
+        $param = [
+            'email_id' => $request->email_id,
+            'logo' => $request->logo,
+            'subject' => $request->subject,
+            'body' => $request->body,
+            'sender' => $request->sender,
+            'cc' => $request->cc,
+            'bcc' => $request->bcc,
+            'attachment' => $request->attachment ?? null,
+            // 'list_email' => $validMail,
+        ];
+
+
+        $response = $this->emailServices->updateEmail($param);
+
+
+        if($response['status'] == 'error'){
+            return redirect('broadcast/email/create')->withErrors($response['message']);
+        }
+    
+        return redirect('broadcast/email')->withSuccess('Email berhasil dikirim');
+        // dd($response);
+    }
+
     
 }
