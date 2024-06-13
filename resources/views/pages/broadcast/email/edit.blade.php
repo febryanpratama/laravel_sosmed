@@ -25,7 +25,7 @@
                     <div class="card-body">
                         <div class="card-body">
                                 
-                            <form method="POST" action="{{ url('broadcast/email/create') }}" enctype="multipart/form-data">
+                            <form method="POST" action="#" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="list_email[]" id="list_email">
                                 <div class="form-group">
