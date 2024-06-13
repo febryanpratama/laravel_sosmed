@@ -46,4 +46,46 @@ class SocialiteController extends Controller
 
         // return redirect()->route('home'); // Redirect to your desired route
     }
+
+    public function redirectToProviderInstagram()
+    {
+        return Socialite::driver('instagram')->redirect();
+    }
+
+    public function handleProviderCallbackInstagram()
+    {
+        $user = Socialite::driver('instagram')->user();
+
+
+        $data = [
+            'user' => [
+                "uid" => $user->getId(),
+                "nickname" => $user->getNickname( ),
+                "name" =>  $user->getName(),
+                "firstName" => null,
+                "lastName" => null,
+                "email" => null,
+                "location" => "",
+                "description" => null,
+                "imageUrl" => $user->getAvatar(),
+                "token" => $user->token,
+            ]
+        ];
+
+        $account = Account::create([
+            'nama_sosmed' => 'instagram oauth',
+            'token' => $user->token,
+            'data' => json_encode($data),
+            'status' => 'Active',
+            'app' => "Instagram",
+            'token_serialize_tweet' => null,
+            'temp_credentials' => null,
+        ]);
+
+        // TODO: Handle the authenticated user, e.g., save to database or session
+
+        return redirect('user/account-sosmed')->withSuccess("Success connect to Instagram");
+    }
+
+
 }

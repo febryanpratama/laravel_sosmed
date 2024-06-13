@@ -71,10 +71,11 @@ Route::prefix('broadcast')->group(function(){
 
 
 Route::get('auth/twitter', [SocialiteController::class, 'redirectToProviderTwitter']);
+Route::get('auth/instagram', [SocialiteController::class, 'redirectToProviderInstagram']);
 
 Route::middleware(['web'])->group(function(){
     Route::get('auth/twitter/callback', [SocialiteController::class, 'handleProviderCallbackTwitter']);
-    // Route::get('auth/instagram/callback', [InstagramController::class, 'handleProviderCallback']);
+    Route::get('auth/instagram/callback', [SocialiteController::class, 'handleProviderCallbackInstagram']);
 });
 
 
