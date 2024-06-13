@@ -74,7 +74,7 @@ class EmailController extends Controller
             return redirect('broadcast/email/create')->withErrors($response['message']);
         }
     
-        return redirect('broadcast/email')->withSuccess('Email berhasil dikirim');
+        return redirect('broadcast/email')->withSuccess('Email berhascil dikirim');
         // dd($response);
     }
 
@@ -82,7 +82,7 @@ class EmailController extends Controller
         // dd($param);
         $response = $this->emailServices->sendEmail($param);
 
-        if($response['status'] == 'error'){
+        if(!$response['status']){
             return redirect('broadcast/email')->withErrors($response['message']);
         }
 
