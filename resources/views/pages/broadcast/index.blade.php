@@ -58,7 +58,9 @@
                                                 <a href="{{ url('broadcast/email/send/'.$item['id']) }}">
                                                     <button class="btn btn-secondary btn-sm">Kirim Email</button>
                                                 </a>
-                                                <button class="btn btn-warning btn-sm">Edit</button>
+                                                <a href="{{ url('broadcast/email/edit/'.$item['id']) }}">
+                                                    <button class="btn btn-warning btn-sm">Edit</button>
+                                                </a>
                                                 <button class="btn btn-danger btn-sm">Delete</button>
                                             </div>
                                         </td>

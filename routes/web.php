@@ -54,6 +54,7 @@ Route::prefix('broadcast')->group(function(){
         Route::get('/create', [EmailController::class, 'create']);
         Route::post('/create', [EmailController::class, 'store']);
         Route::get('/send/{email}', [EmailController::class, 'sendEmail']);
+        Route::get('/edit/{email}', [EmailController::class, 'edit']);
     });
 
     // Whatsapp Controller

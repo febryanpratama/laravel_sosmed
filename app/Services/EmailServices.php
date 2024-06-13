@@ -25,4 +25,10 @@ class EmailServices {
         // dd($response);
         return $response;
     }
+
+    public function getEmailById($param){
+        $api = new Api();
+        $response = $api->get('email/edit/'.$param, null);
+        return $response;
+    }
 }

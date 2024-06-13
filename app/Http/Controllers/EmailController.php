@@ -103,5 +103,14 @@ class EmailController extends Controller
         // Return the Base64 encoded string
         return $base64Encoded;
     }
+
+    public function edit($email){
+        $response = $this->emailServices->getEmailById($email);
+
+        // dd($response['data']);
+        return view('pages.broadcast.email.edit', [
+            'response' => $response['data']
+        ]);
+    }
     
 }
