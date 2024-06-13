@@ -32,7 +32,7 @@ class SocialiteController extends Controller
         ];
 
         $account = Account::create([
-            'user_id' => Auth::user()->id,
+            // 'user_id' => Auth::user()->id,
             'nama_sosmed' => 'twitter '.$user->name,
             'token' => $user->token,
             'app' => 'Twitter',
