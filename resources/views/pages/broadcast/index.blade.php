@@ -61,7 +61,9 @@
                                                 <a href="{{ url('broadcast/email/edit/'.$item['id']) }}">
                                                     <button class="btn btn-warning btn-sm">Edit</button>
                                                 </a>
-                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                                <a href="{{ url('broadcast/email/hapus/'.$item['id']) }}">
+                                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

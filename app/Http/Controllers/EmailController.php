@@ -168,5 +168,17 @@ class EmailController extends Controller
         // dd($response);
     }
 
+    public function hapus($email_id){
+        // dd($email_id);
+
+        $response = $this->emailServices->hapusEmail($email_id);
+
+        if(!$response['status']){
+            return back()->withErrors($response['message']);
+        }
+
+        return redirect('broadcast/email')->withSuccess('Email berhasil dihapus');
+
+    }
     
 }

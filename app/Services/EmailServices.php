@@ -40,4 +40,10 @@ class EmailServices {
         // dd($response);
         return $response;
     }
+
+    public function hapusEmail($param){
+        $api = new Api();
+        $response = $api->get('email/hapus/'.$param, null);
+        return $response;
+    }
 }
