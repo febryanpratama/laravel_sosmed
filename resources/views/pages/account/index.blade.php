@@ -11,9 +11,15 @@
                             <h3 class="box-title">List Account Sosmed</h3>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-default">
-                                Add Token Sosmed
-                            </button>      
+                            <a href="{{ url('auth/twitter') }}" class="btn btn-primary">
+                                Add Twitter Account
+                            </a>
+                            <a href="{{ url('auth/instagram') }}" class="btn btn-danger">
+                                Add Instagram Account
+                            </a>
+                            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-default">
+                                Add Twitter Account
+                            </button>       --}}
                               
                             {{-- <a href="{{ url('pendaftaran/create') }}">
                                 <button class="btn btn-primary">Add token Sosmed</button>
