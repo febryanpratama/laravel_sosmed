@@ -51,7 +51,10 @@
                                         {{-- <td>{{ $item['sender'] }}</td> --}}
                                         <td>
                                             <div class="">
-                                                <button class="btn btn-info btn-sm">Preview</button>
+                                                <a href="https://indonesiacore.com/email/preview/{{ $item['id'] }}" class="btn btn-info btn-sm" target="_blank">
+                                                    Preview
+                                                </a>
+                                                {{-- <button class="btn btn-info btn-sm">Preview</button> --}}
                                                 <a href="{{ url('broadcast/email/send/'.$item['id']) }}">
                                                     <button class="btn btn-secondary btn-sm">Kirim Email</button>
                                                 </a>
