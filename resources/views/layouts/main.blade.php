@@ -481,7 +481,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 	<script src="//cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
 	{{-- <script src="https://cdn.tiny.cloud/1/nrrd8lygpg6zwhiigxmeunavply4kksymo36a296ayailrtb/tinymce/5/tinymce.min.js"></script> --}}
-	<script src="https://cdn.tiny.cloud/1/ux59hwgbgraah92lhg2432f5y48k42jdk19v1rclidxnxhh5/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	<script src="https://cdn.tiny.cloud/1/nrrd8lygpg6zwhiigxmeunavply4kksymo36a296ayailrtb/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
     <script>
         $(document).ready(function(){
