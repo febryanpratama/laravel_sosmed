@@ -166,8 +166,8 @@ return [
          * Package Service Providers...
          */
 
-        SocialiteProviders\Manager\ServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        SocialiteProviders\Manager\ServiceProvider::class,
         App\Providers\SocialiteServiceProvider::class,
 
         /*
