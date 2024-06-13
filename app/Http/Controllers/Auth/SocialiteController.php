@@ -42,8 +42,8 @@ class SocialiteController extends Controller
             'data' => json_encode($json),
         ]);
 
-        return redirect('user/account-sosmed')->withSuccess('Twitter Account Connected');
+        return redirect('account')->withSuccess('Twitter Account Connected');
 
-        return redirect()->route('home'); // Redirect to your desired route
+        // return redirect()->route('home'); // Redirect to your desired route
     }
 }
