@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DokterController;
@@ -67,4 +68,14 @@ Route::prefix('broadcast')->group(function(){
 
     });
 });
+
+
+Route::get('auth/twitter', [SocialiteController::class, 'redirectToProviderTwitter']);
+
+Route::middleware(['web'])->group(function(){
+    Route::get('auth/twitter/callback', [SocialiteController::class, 'handleProviderCallbackTwitter']);
+    // Route::get('auth/instagram/callback', [InstagramController::class, 'handleProviderCallback']);
+});
+
+
 Route::get('logout', [AuthController::class, 'logout']);
