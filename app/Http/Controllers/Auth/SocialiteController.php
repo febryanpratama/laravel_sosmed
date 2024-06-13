@@ -84,7 +84,7 @@ class SocialiteController extends Controller
 
         // TODO: Handle the authenticated user, e.g., save to database or session
 
-        return redirect('user/account-sosmed')->withSuccess("Success connect to Instagram");
+        return redirect('account')->withSuccess("Success connect to Instagram");
     }
 
 
