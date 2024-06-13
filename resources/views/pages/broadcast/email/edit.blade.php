@@ -24,10 +24,9 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-body">
-                                
-                            <form method="POST" action="#" enctype="multipart/form-data">
+                                {{-- {{ dd($response) }} --}}
+                            <form method="POST" action="{{ url('broadcast/email/update') }}" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="list_email[]" id="list_email">
                                 <input type="hidden" name="email_id" value="{{ $response['id'] }}">
                                 <div class="form-group">
                                     <label for="body">Email </label>

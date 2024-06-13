@@ -70,7 +70,7 @@ class EmailController extends Controller
         $response = $this->emailServices->storeEmail($param);
 
 
-        if($response['status'] == 'error'){
+        if(!$response['status']){
             return redirect('broadcast/email/create')->withErrors($response['message']);
         }
     
@@ -140,6 +140,7 @@ class EmailController extends Controller
         
 
         $param = [
+            'email' => $request->email,
             'email_id' => $request->email_id,
             'logo' => $request->logo,
             'subject' => $request->subject,
@@ -148,18 +149,22 @@ class EmailController extends Controller
             'cc' => $request->cc,
             'bcc' => $request->bcc,
             'attachment' => $request->attachment ?? null,
-            // 'list_email' => $validMail,
+        
         ];
 
+        // dd($param);
 
-        $response = $this->emailServices->updateEmail($param);
+        $endpoint = 'email/update/'.$request->email_id;
 
 
-        if($response['status'] == 'error'){
-            return redirect('broadcast/email/create')->withErrors($response['message']);
+        $response = $this->emailServices->updateEmail($endpoint, $param);
+
+
+        if(!$response['status']){
+            return back()->withErrors($response['message']);
         }
     
-        return redirect('broadcast/email')->withSuccess('Email berhasil dikirim');
+        return redirect('broadcast/email')->withSuccess('Email berhasil diubah');
         // dd($response);
     }
 

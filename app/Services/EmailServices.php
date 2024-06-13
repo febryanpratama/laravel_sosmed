@@ -31,4 +31,13 @@ class EmailServices {
         $response = $api->get('email/edit/'.$param, null);
         return $response;
     }
+
+    public function updateEmail($endpoint, $param){
+        // dd($endpoint, $param);
+        $api = new Api();
+        $response = $api->post($endpoint, $param);
+
+        // dd($response);
+        return $response;
+    }
 }
