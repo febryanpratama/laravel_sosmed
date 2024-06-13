@@ -73,7 +73,7 @@ class SocialiteController extends Controller
         ];
 
         $account = Account::create([
-            'nama_sosmed' => 'instagram oauth'.$user->getName(),
+            'nama_sosmed' => 'instagram oauth '.$user->getName(),
             'token' => $user->token,
             'data' => json_encode($data),
             'status' => 'Active',
