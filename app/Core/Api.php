@@ -10,7 +10,7 @@ class Api {
 
     public function __construct()
     {
-        $this->url = 'https://apirs.indonesiacore.com/api/';
+        $this->url = 'https://indonesiacore.com/api/';
     }
 
     public function get($endpoint, $param){
