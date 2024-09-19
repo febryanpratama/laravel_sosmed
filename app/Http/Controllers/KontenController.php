@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Konten;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Facebook\Facebook;
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
+
 
 class KontenController extends Controller
 {
@@ -28,6 +33,8 @@ class KontenController extends Controller
         if($validator->fails()){
             return back()->withErrors($validator->errors()->first());
         }
+
+        $user = Account::where('app', $request->list)->first();
 
         if($request->foto){
             $image = $request->file('foto');
@@ -54,6 +61,43 @@ class KontenController extends Controller
             'status_posting' => $date_jadwal != null ? 'Menunggu' : 'Berhasil'
         ]);
 
-        return back()->withSuccess('Data berhasil ditambahkan');
+        if($implode == 'instagram'){
+            $this->postToInstagram($user->token, url('images/'.$image_name), $request->caption);
+        }else if($implode == 'twitter'){
+            // $this->postToTwitter($request->access_token, $request->caption);
+        }
+
+        return back()->withSuccess('Webhook is not valid. Please check your webhook URL.');
+    }
+
+    public function postToInstagram($accessToken, $imageUrl, $caption)
+    {
+        $fb = new Facebook([
+            'app_id' => env('FACEBOOK_APP_ID'),
+            'app_secret' => env('FACEBOOK_APP_SECRET'),
+            'default_graph_version' => 'v12.0',
+        ]);
+
+        try {
+            $response = $fb->post('/me/media', [
+                'image_url' => $imageUrl,
+                'caption' => $caption,
+            ], $accessToken);
+
+            $mediaId = $response->getGraphNode()['id'];
+
+            // Publish the media
+            $fb->post('/me/media_publish', [
+                'creation_id' => $mediaId,
+            ], $accessToken);
+            
+        } catch(FacebookResponseException $e) {
+            // Handle error
+
+            dd($e);
+        } catch(FacebookSDKException $e) {
+            // Handle error
+            dd($e);
+        }
     }
 }
