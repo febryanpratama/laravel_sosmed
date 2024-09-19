@@ -13,42 +13,44 @@ use Facebook\Exceptions\FacebookSDKException;
 
 class KontenController extends Controller
 {
-    //
+    public function index()
+    {
+        // Initialize
+        $accounts = Account::get();
+        $data     = Konten::get();
 
-    public function index(){
-        $data = Konten::get();
         return view('pages.konten.index', [
-            'data' => $data
+            'data'      => $data,
+            'accounts'  => $accounts
         ]);
     }
 
-    public function store(Request $request){
-        // dd($request->all());
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'caption' => 'required',
             'foto' => 'required',
             'list' => 'required',
         ]);
 
-        if($validator->fails()){
-            return back()->withErrors($validator->errors()->first());
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors()->first())->withInput();
         }
 
         $user = Account::where('app', $request->list)->first();
 
         if($request->foto){
             $image = $request->file('foto');
-            $image_name = time().".".$image->getClientOriginalExtension();
+            $image_name = time() . "." . $image->getClientOriginalExtension();
             $image->move(public_path('images'), $image_name);
         }
 
         $implode = implode(',', $request->list);
 
-        if($request->tanggal && $request->waktu){
-            $date_jadwal = $request->tanggal." ".$request->waktu;
-        }else{
+        if ($request->tanggal && $request->waktu) {
+            $date_jadwal = $request->tanggal . " " . $request->waktu;
+        } else {
             $date_jadwal = null;
-        
         }
 
         Konten::create([
