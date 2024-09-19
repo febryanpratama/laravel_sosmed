@@ -4,7 +4,8 @@ namespace App\Core;
 
 use Illuminate\Support\Facades\Http;
 
-class Api {
+class Api
+{
 
     protected $url;
 
@@ -13,14 +14,15 @@ class Api {
         $this->url = 'https://apirs.indonesiacore.com/api/';
     }
 
-    public function get($endpoint, $param){
+    public function get($endpoint, $param)
+    {
         try {
             //code...
             // $url= 'https://apirs.indonesiacore.com/api/auth/login';
             $url = env('API_URL') . $endpoint;
             // dd($url);
             $data = json_encode($param);
-    
+
             $result =  Http::withOptions(
                 [
                     'verify' => false,
@@ -36,20 +38,19 @@ class Api {
             $resData =  json_decode($result, true);
 
             // dd($resData);
-            if($resData['status'] == 'success'){
+            if ($resData['status'] == 'success') {
                 return [
                     'status' => true,
                     'message' => $resData['message'],
                     'data' => $resData['data']
                 ];
-            }else{
+            } else {
                 return [
                     'status' => false,
                     'message' => $resData['message'],
                     'data' => null
                 ];
             }
-
         } catch (\Throwable $th) {
             //throw $th;
 
@@ -60,16 +61,16 @@ class Api {
             ];
         }
     }
-    
-    public function post($endpoint, $param){
 
+    public function post($endpoint, $param)
+    {
         try {
             //code...
             // $url= 'https://apirs.indonesiacore.com/api/auth/login';
             $url = env('API_URL') . $endpoint;
             // dd($url);
             $data = json_encode($param);
-    
+
             $result =  Http::withOptions(
                 [
                     'verify' => false,
@@ -84,23 +85,21 @@ class Api {
 
             $resData =  json_decode($result, true);
 
-            // dd($resData);
-            if($resData['status'] == 'success'){
+            if ($resData['status'] == 'success') {
                 return [
                     'status' => true,
                     'message' => $resData['message'],
                     'data' => $resData['data']
                 ];
-            }else{
+            } else {
                 return [
                     'status' => false,
                     'message' => $resData['message'],
                     'data' => null
                 ];
             }
-
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
 
             return [
                 'status' => false,
@@ -109,9 +108,10 @@ class Api {
         }
     }
 
-    public function put($endpoint, $param){
+    public function put($endpoint, $param)
+    {
         try {
-            
+
             $url = env('API_URL') . $endpoint;
 
             $data = json_encode($param);
@@ -129,13 +129,13 @@ class Api {
 
             $resData =  json_decode($result, true);
 
-            if($resData['status'] == 'success'){
+            if ($resData['status'] == 'success') {
                 return [
                     'status' => true,
                     'message' => $resData['message'],
                     'data' => $resData['data']
                 ];
-            }else{
+            } else {
                 return [
                     'status' => false,
                     'message' => $resData['message'],
@@ -151,9 +151,10 @@ class Api {
         }
     }
 
-    public function delete($endpoint, $param){
+    public function delete($endpoint, $param)
+    {
         try {
-            
+
             $url = env('API_URL') . $endpoint;
 
             $data = json_encode($param);
@@ -171,13 +172,13 @@ class Api {
 
             $resData =  json_decode($result, true);
 
-            if($resData['status'] == 'success'){
+            if ($resData['status'] == 'success') {
                 return [
                     'status' => true,
                     'message' => $resData['message'],
                     'data' => $resData['data']
                 ];
-            }else{
+            } else {
                 return [
                     'status' => false,
                     'message' => $resData['message'],

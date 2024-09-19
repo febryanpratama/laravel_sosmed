@@ -33,7 +33,7 @@ class SocialiteController extends Controller
 
         $account = Account::create([
             // 'user_id' => Auth::user()->id,
-            'nama_sosmed' => 'twitter '.$user->name,
+            'nama_sosmed' => 'twitter ' . $user->name,
             'token' => $user->token,
             'app' => 'Twitter',
             'temp_credentials' => null,
@@ -60,7 +60,7 @@ class SocialiteController extends Controller
         $data = [
             'user' => [
                 "uid" => $user->getId(),
-                "nickname" => $user->getNickname( ),
+                "nickname" => $user->getNickname(),
                 "name" =>  $user->getName(),
                 "firstName" => null,
                 "lastName" => null,
@@ -73,7 +73,7 @@ class SocialiteController extends Controller
         ];
 
         $account = Account::create([
-            'nama_sosmed' => 'instagram oauth '.$user->getName(),
+            'nama_sosmed' => 'instagram oauth ' . $user->getName(),
             'token' => $user->token,
             'data' => json_encode($data),
             'status' => 'Active',
@@ -86,6 +86,4 @@ class SocialiteController extends Controller
 
         return redirect('account')->withSuccess("Success connect to Instagram");
     }
-
-
 }

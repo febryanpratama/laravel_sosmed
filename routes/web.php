@@ -28,29 +28,30 @@ Route::get('/', function () {
     return redirect('auth/login');
 });
 
-Route::prefix('auth')->group(function(){
+Route::prefix('auth')->group(function () {
     Route::get('login', [AuthController::class, 'index']);
     Route::post('login', [AuthController::class, 'login']);
     Route::get('register', [AuthController::class, 'register']);
     Route::post('register', [AuthController::class, 'store']);
 });
 
-Route::get('home', function(){
+Route::get('home', function () {
     return view('pages.home.index');
 });
 
-Route::prefix('konten')->group(function(){
+Route::prefix('konten')->group(function () {
     Route::get('/', [KontenController::class, 'index']);
-    Route::post('/', [KontenController::class, 'store']);
+    Route::post('/', [KontenController::class, 'store'])->name('konten.store');
 });
-Route::prefix('account')->group(function(){
+
+Route::prefix('account')->group(function () {
     Route::get('/', [AccountController::class, 'index']);
     Route::post('/', [AccountController::class, 'store']);
 });
 
-Route::prefix('broadcast')->group(function(){
+Route::prefix('broadcast')->group(function () {
     // Email Controller
-    Route::prefix('email')->group(function(){
+    Route::prefix('email')->group(function () {
         Route::get('/', [EmailController::class, 'index']);
         Route::get('/create', [EmailController::class, 'create']);
         Route::post('/create', [EmailController::class, 'store']);
@@ -62,10 +63,9 @@ Route::prefix('broadcast')->group(function(){
 
     // Whatsapp Controller
 
-    Route::prefix('whatsapp-blast')->group(function(){
+    Route::prefix('whatsapp-blast')->group(function () {
         Route::get('/', [WaController::class, 'index']);
         Route::get('/create', [WaController::class, 'create']);
-
     });
 });
 
@@ -73,7 +73,7 @@ Route::prefix('broadcast')->group(function(){
 Route::get('auth/twitter', [SocialiteController::class, 'redirectToProviderTwitter']);
 Route::get('auth/instagram', [SocialiteController::class, 'redirectToProviderInstagram']);
 
-Route::middleware(['web'])->group(function(){
+Route::middleware(['web'])->group(function () {
     Route::get('auth/twitter/callback', [SocialiteController::class, 'handleProviderCallbackTwitter']);
     Route::get('auth/instagram/callback', [SocialiteController::class, 'handleProviderCallbackInstagram']);
 });
