@@ -61,9 +61,9 @@ Route::middleware('checksession')->group(function () {
         Route::prefix('whatsapp-blast')->group(function () {
             Route::get('/', [WaController::class, 'index']);
             Route::get('/create', [WaController::class, 'create']);
+            Route::post('/store', [WaController::class, 'store'])->name('wa.store');
         });
     });
-
 
     Route::get('auth/twitter', [SocialiteController::class, 'redirectToProviderTwitter']);
     Route::get('auth/instagram', [SocialiteController::class, 'redirectToProviderInstagram']);

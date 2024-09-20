@@ -65,10 +65,8 @@ class Api
     public function post($endpoint, $param)
     {
         try {
-            //code...
             // $url= 'https://apirs.indonesiacore.com/api/auth/login';
-            $url = env('API_URL') . $endpoint;
-            // dd($url);
+            $url  = env('API_URL') . $endpoint;
             $data = json_encode($param);
 
             $result =  Http::withOptions(
@@ -83,7 +81,7 @@ class Api
                 ]
             )->post($url, $param);
 
-            $resData =  json_decode($result, true);
+            $resData = json_decode($result, true);
 
             if ($resData['status'] == 'success') {
                 return [

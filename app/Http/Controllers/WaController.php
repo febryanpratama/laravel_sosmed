@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class WaController extends Controller
 {
-    //
     protected $waServices;
 
     public function __construct(WaServices $waServices)
@@ -15,18 +14,31 @@ class WaController extends Controller
         $this->waServices = $waServices;
     }
 
-    public function index(){
-
+    public function index()
+    {
+        // Initialize
         $response = $this->waServices->getWa([]);
 
-
-        // dd($response);
         return view('pages.broadcast.wa.index', [
             'response' => $response['data']['data'],
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
         return view('pages.broadcast.wa.create');
+    }
+
+    public function store(Request $request)
+    {
+        // Initialize
+        // $response = $this->waServices->storeWa([
+        //     'message'   => $request->message,
+        //     'file'      => $request->file
+        // ]);
+
+        // dd($response);
+
+
     }
 }
