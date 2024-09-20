@@ -39,7 +39,7 @@
 					</li>
 					<li>
 						<a href="{{ url('konten') }}">
-							<i data-feather="monitor"></i>
+							<i data-feather="navigation"></i>
 							<span>Konten</span>
 						</a>
 					</li>

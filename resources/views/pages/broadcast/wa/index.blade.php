@@ -14,7 +14,6 @@
                             <a href="{{ url('broadcast/whatsapp-blast/create') }}" class=" btn btn-info btn-sm">
                                 Tambah Whatsapp Blast
                             </a>
-                              
                         </div>
                     </div>
                 </div>
@@ -23,17 +22,17 @@
                         <div class="table-responsive">
                             <table class="table mb-0" id="myTable">
                                 <thead class="table-light">
-                                  <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Whatsapp Number</th>
-                                    <th scope="col">Country Number</th>
-                                    <th scope="col">Message</th>
-                                    <th scope="col">Status</th>
-                                    {{-- <th scope="col"></th> --}}
-                                    <th scope="col">Send Date</th>
-                                    {{-- <th scope="col">Sender</th> --}}
-                                    <th scope="col">Action</th>
-                                  </tr>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Whatsapp Number</th>
+                                        <th scope="col">Country Number</th>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">Status</th>
+                                        {{-- <th scope="col"></th> --}}
+                                        <th scope="col">Send Date</th>
+                                        {{-- <th scope="col">Sender</th> --}}
+                                        <th scope="col">Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($response as $key=>$item)
@@ -53,8 +52,8 @@
                                     </tr>
                                     @endforeach
                                 </tbody>
-                              </table>
-                          </div>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
