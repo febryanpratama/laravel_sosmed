@@ -13,7 +13,7 @@ class AuthServices extends Api
         $response   = $api->post('set-account', $param);
 
         if ($response['status'] == true) {
-            session(['token' => $response['data']['token']]);
+            // session(['token' => $response['data']['token']]);
 
             return [
                 'status'    => true,

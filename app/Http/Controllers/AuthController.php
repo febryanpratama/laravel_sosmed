@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuthServices;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    //
     protected $authServices;
 
     public function __construct(AuthServices $authServices)
@@ -40,6 +41,15 @@ class AuthController extends Controller
         $response = $this->authServices->postLogin($param);
 
         if ($response['status'] == true) {
+            // Check Data
+            $users = User::where('kode_api', $response['data']['kode'])->first();
+
+            if ($users) {
+                Session::put('user', $users);
+            } else {
+                return back()->withErrors('Data server belum tersinkronisasi.');
+            }
+
             return redirect('home')->withSuccess($response['message']);
         } else {
             return back()->withErrors($response['message']);
