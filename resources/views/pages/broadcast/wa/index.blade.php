@@ -45,8 +45,8 @@
                                         <td>{{ $item['send_date'] }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center">
-                                                <button class="btn btn-warning">Update</button>
-                                                <button class="btn btn-danger">Delete</button>
+                                                <a class="btn btn-warning btn-sm" style="margin-right: 10px;">Update</a>
+                                                <a class="btn btn-danger btn-sm">Delete</a>
                                             </div>
                                         </td>
                                     </tr>

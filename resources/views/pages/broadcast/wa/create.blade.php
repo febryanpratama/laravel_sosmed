@@ -82,7 +82,8 @@
             if (result.status === 'success') {
                 alert(result.message); // Menampilkan pesan sukses
 
-                window.history.back(); // Kembali ke halaman sebelumnya
+                // window.history.back(); // Kembali ke halaman sebelumnya
+                window.location = "broadcast/whatsapp-blast"
             } else {
                 alert('Gagal menambahkan data');
             }
