@@ -11,18 +11,20 @@ class AuthController extends Controller
     //
     protected $authServices;
 
-    public function __construct(AuthServices $authServices){
+    public function __construct(AuthServices $authServices)
+    {
         $this->authServices = $authServices;
     }
 
-    public function index(){
+    public function index()
+    {
         return view('pages.auth.login');
     }
 
-    public function login(Request $request){
-
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'nik' => 'required',
+            'nik'   => 'required',
             'no_rm' => 'required',
         ]);
 
@@ -31,28 +33,26 @@ class AuthController extends Controller
             'password' => $request->no_rm
         ];
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator->errors()->first());
         }
 
         $response = $this->authServices->postLogin($param);
-        // dd($response);
 
-        if($response['status'] == true){
+        if ($response['status'] == true) {
             return redirect('home')->withSuccess($response['message']);
-        }else{
+        } else {
             return back()->withErrors($response['message']);
         }
-
     }
 
-    public function register(){
+    public function register()
+    {
         return view('pages.auth.register');
     }
 
-    public function store(Request $request){
-        // dd($request->all());
-
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nik' => 'required|numeric',
             'no_rm' => 'required',
@@ -60,22 +60,22 @@ class AuthController extends Controller
             'no_hp' => 'required|numeric',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator->errors()->first());
         }
 
         $response = $this->authServices->postRegister($request->all());
 
-        if($response['status'] == true){
+        if ($response['status'] == true) {
             return redirect('auth/login')->withSuccess($response['message']);
-        }else{
+        } else {
             return back()->withErrors($response['message']);
         }
-
     }
 
 
-    public function logout(){
+    public function logout()
+    {
 
         session()->forget('token');
 
