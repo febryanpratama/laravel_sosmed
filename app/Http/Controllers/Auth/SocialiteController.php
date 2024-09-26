@@ -87,6 +87,19 @@ class SocialiteController extends Controller
         return redirect('account')->withSuccess("Success connect to Instagram");
     }
 
+    // Instagram
+    public function generateInstagramAuthUrl()
+    {
+        // Initialize
+        $client_id    = env('INSTAGRAM_CLIENT_ID');
+        $redirect_uri = urlencode(env('INSTAGRAM_REDIRECT_URI'));
+
+        // Generate URL
+        $authUrl = "https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id={$client_id}&redirect_uri={$redirect_uri}&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish";
+
+        return response()->json(['authUrl' => $authUrl]);
+    }
+
     public function handleCallbackInstagram(Request $request)
     {
         // Initialize
@@ -186,7 +199,7 @@ class SocialiteController extends Controller
         }
 
         // Initialize
-        $url    = 'https://graph.instagram.com/v20.0/me';
+        $url    = 'me';
         $body   = [
             'fields'        => 'user_id,username',
             'access_token'  => $getAccount->token
@@ -209,7 +222,7 @@ class SocialiteController extends Controller
 
     private function callMetaGet($url, $body)
     {
-        $response = Http::get($url, $body);
+        $response = Http::get('https://graph.instagram.com/v20.0/' . $url, $body);
 
         // Response dari Instagram API
         $data = $response->json();

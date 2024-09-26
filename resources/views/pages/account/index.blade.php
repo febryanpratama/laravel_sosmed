@@ -33,7 +33,8 @@
                                         </a>
 
                                         <!-- <a href="{{ url('auth/instagram') }}" class="btn btn-danger" target="_blank"> -->
-                                        <a href="https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=846978510921668&redirect_uri=https://digimar.indonesiacore.com/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish" class="btn btn-danger btn-sm" target="_blank">
+                                        <!-- <a href="https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=846978510921668&redirect_uri=https://digimar.indonesiacore.com/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish" class="btn btn-danger btn-sm" target="_blank"> -->
+                                        <a href="#" id="instagram-auth-link" class="btn btn-danger btn-sm" target="_blank">
                                             Tambahkan Akun Instagram
                                         </a>
                                     </div>
@@ -119,4 +120,16 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+@endsection
+
+@section('footer')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch(`{{ route('instagram.auth.url') }}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('instagram-auth-link').setAttribute('href', data.authUrl);
+            });
+    });
+</script>
 @endsection

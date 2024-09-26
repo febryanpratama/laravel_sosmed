@@ -43,6 +43,7 @@ Route::middleware('checksession')->group(function () {
     Route::prefix('account')->group(function () {
         Route::get('/', [AccountController::class, 'index'])->name('account.index');
         // Route::post('/', [AccountController::class, 'store']);
+        Route::get('/instagram/auth-url', [SocialiteController::class, 'generateInstagramAuthUrl'])->name('instagram.auth.url');
         Route::get('activation/{id}', [SocialiteController::class, 'activation'])->name('activation');
     });
 

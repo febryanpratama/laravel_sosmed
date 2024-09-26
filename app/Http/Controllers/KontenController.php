@@ -39,7 +39,7 @@ class KontenController extends Controller
 
         $user = Account::where('app', $request->list)->first();
 
-        if($request->foto){
+        if ($request->foto) {
             $image = $request->file('foto');
             $image_name = time() . "." . $image->getClientOriginalExtension();
             $image->move(public_path('images'), $image_name);
@@ -63,9 +63,9 @@ class KontenController extends Controller
             'status_posting' => $date_jadwal != null ? 'Menunggu' : 'Berhasil'
         ]);
 
-        if($implode == 'instagram'){
-            $this->postToInstagram($user->token, url('images/'.$image_name), $request->caption);
-        }else if($implode == 'twitter'){
+        if ($implode == 'instagram') {
+            $this->postToInstagram($user->token, url('images/' . $image_name), $request->caption);
+        } else if ($implode == 'twitter') {
             // $this->postToTwitter($request->access_token, $request->caption);
         }
 
@@ -92,12 +92,11 @@ class KontenController extends Controller
             $fb->post('/me/media_publish', [
                 'creation_id' => $mediaId,
             ], $accessToken);
-            
-        } catch(FacebookResponseException $e) {
+        } catch (FacebookResponseException $e) {
             // Handle error
 
             dd($e);
-        } catch(FacebookSDKException $e) {
+        } catch (FacebookSDKException $e) {
             // Handle error
             dd($e);
         }
