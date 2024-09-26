@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\TwitterController;
 use App\Http\Controllers\Api\CallbackController;
+use App\Http\Controllers\Api\WebhooksMetaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('callback', [CallbackController::class, 'index']);
 
+// Callback
+Route::get('callback', [CallbackController::class, 'index']);
 Route::get('twitter', [TwitterController::class, 'indexgetTweet']);
+
+// Webhooks META
+Route::get('request/webhooks', [WebhooksMetaController::class, 'store']);
