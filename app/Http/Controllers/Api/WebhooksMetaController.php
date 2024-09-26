@@ -33,13 +33,13 @@ class WebhooksMetaController extends Controller
         $requestData = $request->all();
 
         // Verifikasi token
-        if ($request->input('hub.verify_token') === $this->keyAccess) {
+        if ($requestData['hub_verify_token'] === $this->keyAccess) {
             Webhooks::create([
                 'value' => $requestData
             ]);
 
             // Return hub.challenge jika token valid
-            return response($request->input('hub.challenge'), 200);
+            return response($requestData['hub_challenge'], 200);
         } else {
             // Jika token tidak valid
             return response('Invalid token', 403);
