@@ -49,7 +49,7 @@ class SocialiteController extends Controller
 
     public function redirectToProviderInstagram()
     {
-        return Socialite::driver('instagram')->redirect();
+        return Socialite::driver('instagram')->scopes(['user_profile', 'user_media'])->redirect();
     }
 
     public function handleProviderCallbackInstagram()
