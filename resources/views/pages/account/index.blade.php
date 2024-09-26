@@ -5,50 +5,75 @@
     <div class="container-full">
         <section class="content">
             <div class="row">
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <div class="card-title align-middle">
-                            <h3 class="box-title">List Account Sosmed</h3>
+                            <h3 class="box-title">Daftar Akun Sosmed</h3>
                         </div>
                         <div>
-                            <a href="{{ url('auth/twitter') }}" class="btn btn-primary" target="_blank">
-                                Add Twitter Account
-                            </a>
-                            <a href="{{ url('auth/instagram') }}" class="btn btn-danger" target="_blank">
-                                Add Instagram Account
-                            </a>
 
-                            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-default">
-                                Add Twitter Account
-                            </button>       --}}
 
-                            {{-- <a href="{{ url('pendaftaran/create') }}">
-                            <button class="btn btn-primary">Add token Sosmed</button>
-                            </a> --}}
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-default">
+                                Add Twitter Account
+                            </button>
                         </div>
                     </div>
-                </div>
-                @foreach ($data as $item)
-                {{-- {{ dd($item) }} --}}
-                <div class="col-xl-4 col-12">
-                    <div class="box box-solid box-inverse box-info">
-                        <div class="box-header with-border d-flex justify-content-between">
-                            <h4 class="box-title"><strong>{{ Carbon\Carbon::parse($item['waktu_reservasi'])->format('d-M-Y') }} {{ $item['jam'] }}</strong></h4>
-                            <div class="badge badge-success">{{ $item->status }}</div>
-                        </div>
+                </div> -->
 
-                        <div class="box-body">
-                            <div class="d-flex justify-content-evenly">
-                                <label><b>{{ $item['nama_sosmed'] ?? "DR Archiloka MSI" }}</b></label>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="col-xl-12 col-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h4 class="box-title">Akun Sosial Media</h4>
 
+                                    <div class="pull-right">
+                                        <a href="{{ url('auth/twitter') }}" class="btn btn-primary btn-sm" target="_blank">
+                                            Tambahkan Akun Twitter
+                                        </a>
+
+                                        <!-- <a href="{{ url('auth/instagram') }}" class="btn btn-danger" target="_blank"> -->
+                                        <a href="https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=846978510921668&redirect_uri=https://digimar.indonesiacore.com/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish" class="btn btn-danger btn-sm" target="_blank">
+                                            Tambahkan Akun Instagram
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="bb-2">No.</th>
+                                                    <th class="bb-2">Nama Akun</th>
+                                                    <th class="bb-2">Apps</th>
+                                                    <th class="bb-2">Status</th>
+                                                    <th class="bb-2">Opsi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data as $item)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $item->nama_sosmed }}</td>
+                                                    <td>{{ $item->app }}</td>
+                                                    <td><span class="badge {{ ($item->status == 'Active') ? 'badge-success' : 'badge-info' }}">{{ $item->status }}</span></td>
+                                                    <td>
+                                                        <!-- <a href="" class="btn btn-sm btn-warning">Edit</a> -->
+                                                        <a href="" class="btn btn-sm btn-danger">Hapus</a>
+                                                        @if ($item->status == 'Inactive')
+                                                        <a href="{{ route('activation', $item->id) }}" class="btn btn-sm btn-primary">Aktivasi</a>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <hr>
-                            <p>{{ $item->token }}</p>
-
                         </div>
                     </div>
                 </div>
-                @endforeach
             </div>
         </section>
     </div>

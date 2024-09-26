@@ -1,14 +1,7 @@
 <aside class="main-sidebar">
 	<!-- sidebar-->
 	<section class="sidebar position-relative">
-		{{-- <div class="help-bt">
-			<a href="tel:108" class="d-flex align-items-center">
-				<div class="bg-danger rounded10 h-50 w-50 l-h-50 text-center me-15">
-					<i data-feather="mic"></i>
-				</div>
-				<h4 class="mb-0">Emergency<br>help</h4>
-			</a>
-		</div> --}}
+
 		<div class="multinav">
 			<div class="multinav-scroll" style="height: 100%;">
 				<!-- sidebar menu-->
@@ -21,12 +14,14 @@
 					</li>
 					<li class="treeview">
 						<a href="#">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package">
-								<path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"></path>
-								<polyline points="2.32 6.16 12 11 21.68 6.16"></polyline>
-								<line x1="12" y1="22.76" x2="12" y2="11"></line>
-								<line x1="7" y1="3.5" x2="17" y2="8.5"></line>
-							</svg>
+							<!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-monitor">
+								<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+								<line x1="8" y1="21" x2="16" y2="21"></line>
+								<line x1="12" y1="17" x2="12" y2="21"></line>
+							</svg> -->
+
+							<i data-feather="send"></i>
+
 							<span>Blast</span>
 							<span class="pull-right-container">
 								<i class="fa fa-angle-right pull-right"></i>
@@ -38,15 +33,15 @@
 						</ul>
 					</li>
 					<li>
-						<a href="{{ url('konten') }}">
-							<i data-feather="navigation"></i>
-							<span>Konten</span>
+						<a href="{{ url('account') }}">
+							<i data-feather="settings"></i>
+							<span>Akun Sosial Media</span>
 						</a>
 					</li>
 					<li>
-						<a href="{{ url('account') }}">
-							<i data-feather="users"></i>
-							<span>Akun</span>
+						<a href="{{ url('konten') }}">
+							<i data-feather="edit"></i>
+							<span>Konten Sosial Media</span>
 						</a>
 					</li>
 					<li>

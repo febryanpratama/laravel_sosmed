@@ -6,6 +6,7 @@ use App\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
@@ -49,13 +50,12 @@ class SocialiteController extends Controller
 
     public function redirectToProviderInstagram()
     {
-        return Socialite::driver('instagram')->scopes(['user_profile', 'user_media'])->redirect();
+        return Socialite::driver('instagram')->redirect();
     }
 
     public function handleProviderCallbackInstagram()
     {
         $user = Socialite::driver('instagram')->user();
-
 
         $data = [
             'user' => [
@@ -85,5 +85,146 @@ class SocialiteController extends Controller
         // TODO: Handle the authenticated user, e.g., save to database or session
 
         return redirect('account')->withSuccess("Success connect to Instagram");
+    }
+
+    public function handleCallbackInstagram(Request $request)
+    {
+        // Initialize
+        $code              = $request->code;
+        $getTemporaryToken = $this->getTemporaryToken($code);
+
+        if ($getTemporaryToken['status']) {
+            // Get Long-Term Token
+            $getLongTerm = $this->getLongTerm($getTemporaryToken['access_token']);
+
+            if ($getLongTerm['status']) {
+                Account::create([
+                    'nama_sosmed'           => '-',
+                    'token'                 => $getLongTerm['access_token'],
+                    'status'                => 'Inactive',
+                    'app'                   => "Instagram",
+                    'token_serialize_tweet' => null,
+                    'temp_credentials'      => null
+                ]);
+
+                return redirect()->route('account.index')->withSuccess($getLongTerm['message']);
+            } else {
+                return redirect()->route('account.index')->withSuccess($getLongTerm['message']);
+            }
+        } else {
+            return redirect()->route('account.index')->withSuccess($getTemporaryToken['message']);
+        }
+    }
+
+    private function getTemporaryToken($code)
+    {
+        $response = Http::asForm()->post('https://api.instagram.com/oauth/access_token', [
+            'client_id'     => env('INSTAGRAM_CLIENT_ID'),
+            'client_secret' => env('INSTAGRAM_CLIENT_SECRET'),
+            'grant_type'    => 'authorization_code',
+            'redirect_uri'  => env('INSTAGRAM_REDIRECT_URI'),
+            'code'          => $code
+        ]);
+
+        // Response dari Instagram API
+        $data = $response->json();
+
+        if ($response->successful()) {
+            $accessToken = $data['access_token'];
+
+            return [
+                'status'        => true,
+                'message'       => 'Koneksi berhasil.',
+                'access_token'  => $accessToken,
+                'data'          => $data
+            ];
+        } else {
+            return [
+                'status'    => false,
+                'message'   => 'Gagal mendapatkan access token',
+                'details'   => $data,
+            ];
+        }
+    }
+
+    private function getLongTerm($token)
+    {
+        $response = Http::get('https://graph.instagram.com/access_token', [
+            'grant_type'    => 'ig_exchange_token',
+            'client_secret' => env('INSTAGRAM_CLIENT_SECRET'),
+            'access_token'  => $token
+        ]);
+
+        // Response dari Instagram API
+        $data = $response->json();
+
+        if ($response->successful()) {
+            $accessToken = $data['access_token'];
+
+            return [
+                'status'        => true,
+                'message'       => 'Koneksi berhasil.',
+                'access_token'  => $accessToken,
+                'data'          => $data
+            ];
+        } else {
+            return [
+                'status'    => false,
+                'message'   => 'Gagal mendapatkan access token',
+                'details'   => $data,
+            ];
+        }
+    }
+
+    public function activation($id)
+    {
+        // Initialize
+        $getAccount = Account::where('id', $id)->first();
+
+        if (!$getAccount) {
+            return redirect()->back()->withErrors('Data tidak ditemukan');
+        }
+
+        // Initialize
+        $url    = 'https://graph.instagram.com/v20.0/me';
+        $body   = [
+            'fields'        => 'user_id,username',
+            'access_token'  => $getAccount->token
+        ];
+
+        // Call API
+        $response = $this->callMetaGet($url, $body);
+
+        if ($response['status']) {
+            $getAccount->update([
+                'status'        => 'Active',
+                'nama_sosmed'   => $response['data']['username']
+            ]);
+
+            return redirect()->back()->withSuccess('Aktivasi Akun Berhasil');
+        }
+
+        return redirect()->back()->withErrors('Aktivasi Akun Gagal');
+    }
+
+    private function callMetaGet($url, $body)
+    {
+        $response = Http::get($url, $body);
+
+        // Response dari Instagram API
+        $data = $response->json();
+
+        if ($response->successful()) {
+            return [
+                'status'    => true,
+                'message'   => 'Berhasil mendapatkan data.',
+                'data'      => $data
+            ];
+        } else {
+            return [
+                'status'    => false,
+                'message'   => 'Gagal mendapatkan data.'
+            ];
+        }
     }
 }

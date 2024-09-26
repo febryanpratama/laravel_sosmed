@@ -41,8 +41,9 @@ Route::middleware('checksession')->group(function () {
     });
 
     Route::prefix('account')->group(function () {
-        Route::get('/', [AccountController::class, 'index']);
-        Route::post('/', [AccountController::class, 'store']);
+        Route::get('/', [AccountController::class, 'index'])->name('account.index');
+        // Route::post('/', [AccountController::class, 'store']);
+        Route::get('activation/{id}', [SocialiteController::class, 'activation'])->name('activation');
     });
 
     Route::prefix('broadcast')->group(function () {
@@ -70,7 +71,7 @@ Route::middleware('checksession')->group(function () {
 
     Route::middleware(['web'])->group(function () {
         Route::get('auth/twitter/callback', [SocialiteController::class, 'handleProviderCallbackTwitter']);
-        Route::get('auth/instagram/callback', [SocialiteController::class, 'handleProviderCallbackInstagram']);
+        Route::get('auth/instagram/callback', [SocialiteController::class, 'handleCallbackInstagram']);
     });
 });
 
