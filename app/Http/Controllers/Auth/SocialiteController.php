@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Account;
+use App\FieldsInstagram;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,46 +49,46 @@ class SocialiteController extends Controller
         // return redirect()->route('home'); // Redirect to your desired route
     }
 
-    public function redirectToProviderInstagram()
-    {
-        return Socialite::driver('instagram')->redirect();
-    }
+    // public function redirectToProviderInstagram()
+    // {
+    //     return Socialite::driver('instagram')->redirect();
+    // }
 
-    public function handleProviderCallbackInstagram()
-    {
-        $user = Socialite::driver('instagram')->user();
+    // public function handleProviderCallbackInstagram()
+    // {
+    //     $user = Socialite::driver('instagram')->user();
 
-        $data = [
-            'user' => [
-                "uid" => $user->getId(),
-                "nickname" => $user->getNickname(),
-                "name" =>  $user->getName(),
-                "firstName" => null,
-                "lastName" => null,
-                "email" => null,
-                "location" => "",
-                "description" => null,
-                "imageUrl" => $user->getAvatar(),
-                "token" => $user->token,
-            ]
-        ];
+    //     $data = [
+    //         'user' => [
+    //             "uid" => $user->getId(),
+    //             "nickname" => $user->getNickname(),
+    //             "name" =>  $user->getName(),
+    //             "firstName" => null,
+    //             "lastName" => null,
+    //             "email" => null,
+    //             "location" => "",
+    //             "description" => null,
+    //             "imageUrl" => $user->getAvatar(),
+    //             "token" => $user->token,
+    //         ]
+    //     ];
 
-        $account = Account::create([
-            'nama_sosmed' => 'instagram oauth ' . $user->getName(),
-            'token' => $user->token,
-            'data' => json_encode($data),
-            'status' => 'Active',
-            'app' => "Instagram",
-            'token_serialize_tweet' => null,
-            'temp_credentials' => null,
-        ]);
+    //     $account = Account::create([
+    //         'nama_sosmed' => 'instagram oauth ' . $user->getName(),
+    //         'token' => $user->token,
+    //         'data' => json_encode($data),
+    //         'status' => 'Active',
+    //         'app' => "Instagram",
+    //         'token_serialize_tweet' => null,
+    //         'temp_credentials' => null,
+    //     ]);
 
-        // TODO: Handle the authenticated user, e.g., save to database or session
+    //     // TODO: Handle the authenticated user, e.g., save to database or session
 
-        return redirect('account')->withSuccess("Success connect to Instagram");
-    }
+    //     return redirect('account')->withSuccess("Success connect to Instagram");
+    // }
 
-    // Instagram
+    // ====== Instagram
     public function generateInstagramAuthUrl()
     {
         // Initialize
@@ -201,7 +202,7 @@ class SocialiteController extends Controller
         // Initialize
         $url    = 'me';
         $body   = [
-            'fields'        => 'user_id,username',
+            'fields'        => 'user_id,username,name,account_type',
             'access_token'  => $getAccount->token
         ];
 
@@ -209,9 +210,19 @@ class SocialiteController extends Controller
         $response = $this->callMetaGet($url, $body);
 
         if ($response['status']) {
+            // Initialize
+            $extractData = $response['data'];
+
+            FieldsInstagram::create([
+                'account_id'    => $getAccount->id,
+                'name'          => $extractData['name'],
+                'instagram_id'  => $extractData['user_id'],
+                'account_type'  => $extractData['account_type']
+            ]);
+
             $getAccount->update([
                 'status'        => 'Active',
-                'nama_sosmed'   => $response['data']['username']
+                'nama_sosmed'   => $extractData['username']
             ]);
 
             return redirect()->back()->withSuccess('Aktivasi Akun Berhasil');

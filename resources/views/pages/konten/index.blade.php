@@ -5,74 +5,56 @@
     <div class="container-full">
         <section class="content">
             <div class="row">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <div class="card-title align-middle">
-                            <h3 class="box-title">List Konten</h3>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-default">
-                                Add Konten Sosmed
-                            </button>
+                <div class="col-12">
+                    <div class="col-xl-12 col-12">
+                        <div class="box">
+                            <div class="box-header">
+                                <h4 class="box-title">Konten Sosial Media</h4>
 
-                            {{-- <a href="{{ url('pendaftaran/create') }}">
-                            <button class="btn btn-primary">Add token Sosmed</button>
-                            </a> --}}
+                                <div class="pull-right">
+                                    <a href="{{ route('konten.create') }}" class="btn btn-primary btn-sm">
+                                        Tambah Data
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="bb-2">No.</th>
+                                                <th class="bb-2">App</th>
+                                                <th class="bb-2">Kategori Posting</th>
+                                                <th class="bb-2">Jadwal Upload</th>
+                                                <th class="bb-2">Status Posting</th>
+                                                <th class="bb-2">Opsi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($data as $item)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $item->app }}</td>
+                                                <td>{{ $item->status_post }}</td>
+                                                <td>{{ ($item->date_jadwal) ? date('d F Y H:i', strtotime($item->date_jadwal)) : '-' }}</td>
+                                                <td><span class="badge {{ ($item->status_posting == 'Berhasil') ? 'badge-success' : 'badge-info' }}">{{ $item->status_posting }}</span></td>
+                                                <td>
+                                                    <a href="#" id="now-post" data-id="{{ $item->id }}" class="btn btn-sm btn-primary">Posting Sekarang</a>
+                                                    <a href="" class="btn btn-sm btn-warning">Edit</a>
+                                                    <a href="" class="btn btn-sm btn-danger">Hapus</a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {{-- @foreach ($data as $item)
-                    <div class="col-xl-4 col-12">
-                        <div class="box box-solid box-inverse box-info">
-                        <div class="box-header with-border d-flex justify-content-between">
-                            <h4 class="box-title"><strong>{{ Carbon\Carbon::parse($item['waktu_reservasi'])->format('d-M-Y') }} {{ $item['jam'] }}</strong></h4>
-                <div class="badge badge-success">{{ $item->status }}</div>
             </div>
-
-            <div class="box-body">
-                <div class="d-flex justify-content-evenly">
-                    <label><b>{{ $item['nama_sosmed'] ?? "DR Archiloka MSI" }}</b></label>
-
-                </div>
-                <hr>
-                <p>{{ $item->token }}</p>
-
-            </div>
+        </section>
     </div>
-</div>
-@endforeach --}}
-@foreach ($data as $item)
-<div class="col-xl-4 col-12">
-    <div class="box box-solid box-inverse box-info">
-        <div class="box-header with-border d-flex justify-content-between">
-            <h4 class="box-title"><strong>29-May-2024 </strong></h4>
-            <div class="d-flex">
-                {{-- <div class="mx-2 badge badge-success"></div> --}}
-                <div class="mx-2 badge badge-danger">{{ $item->status_post }}</div>
-            </div>
-        </div>
-
-        <div class="box-body">
-            <div class="d-flex justify-content-evenly">
-                <img src="{{ asset('images/'.$item->image) }}" class="img-fluid" alt="">
-            </div>
-            <hr>
-            <p class="badge badge-primary align-center">{{ $item->app }}</p><br>
-            <p class="badge badge-danger align-center">{{ $item->url ?? "Url saat ini belum tersedia" }}</p>
-            <p>{{ $item->caption }}</p>
-            <hr>
-            <div class="d-flex justify-content-evenly">
-                <button class="btn btn-warning">Update</button>
-                <button class="btn btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-</div>
-</section>
-</div>
 </div>
 
 <div class="modal fade" id="modal-default">

@@ -36,7 +36,8 @@ Route::middleware('checksession')->group(function () {
     });
 
     Route::prefix('konten')->group(function () {
-        Route::get('/', [KontenController::class, 'index']);
+        Route::get('/', [KontenController::class, 'index'])->name('konten.index');
+        Route::get('create', [KontenController::class, 'create'])->name('konten.create');
         Route::post('/', [KontenController::class, 'store'])->name('konten.store');
     });
 

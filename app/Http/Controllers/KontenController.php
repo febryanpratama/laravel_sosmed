@@ -17,7 +17,7 @@ class KontenController extends Controller
     {
         // Initialize
         $accounts = Account::get();
-        $data     = Konten::get();
+        $data     = Konten::latest()->paginate(20);
 
         return view('pages.konten.index', [
             'data'      => $data,
@@ -25,12 +25,20 @@ class KontenController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        // Initialize
+        $accounts = Account::get();
+
+        return view('pages.konten.create', ['accounts' => $accounts]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'caption' => 'required',
-            'foto' => 'required',
-            'list' => 'required',
+            'caption'   => 'required',
+            'foto'      => 'required',
+            'list'      => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -64,12 +72,12 @@ class KontenController extends Controller
         ]);
 
         if ($implode == 'instagram') {
-            $this->postToInstagram($user->token, url('images/' . $image_name), $request->caption);
+            // $this->postToInstagram($user->token, url('images/' . $image_name), $request->caption);
         } else if ($implode == 'twitter') {
             // $this->postToTwitter($request->access_token, $request->caption);
         }
 
-        return back()->withSuccess('Webhook is not valid. Please check your webhook URL.');
+        return redirect()->route('konten.index')->withSuccess('Berhasil menambahkan data.');
     }
 
     public function postToInstagram($accessToken, $imageUrl, $caption)
