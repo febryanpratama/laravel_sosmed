@@ -3,25 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\AccountKontens;
+use App\FieldsInstagram;
 use App\Konten;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Facebook\Facebook;
-use Facebook\Exceptions\FacebookResponseException;
-use Facebook\Exceptions\FacebookSDKException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class KontenController extends Controller
 {
     public function index()
     {
         // Initialize
-        $accounts = Account::get();
-        $data     = Konten::latest()->paginate(20);
+        $data = Konten::with('accountKontens')->latest()->paginate(20);
 
         return view('pages.konten.index', [
-            'data'      => $data,
-            'accounts'  => $accounts
+            'data'      => $data
         ]);
     }
 
@@ -37,7 +35,7 @@ class KontenController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'caption'   => 'required',
-            'foto'      => 'required',
+            'files'     => 'required',
             'list'      => 'required',
         ]);
 
@@ -45,68 +43,269 @@ class KontenController extends Controller
             return back()->withErrors($validator->errors()->first())->withInput();
         }
 
-        $user = Account::where('app', $request->list)->first();
+        try {
+            // Memulai transaksi
+            DB::beginTransaction();
 
-        if ($request->foto) {
-            $image = $request->file('foto');
-            $image_name = time() . "." . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $image_name);
+            // Get Account
+            $user = Account::where('id', $request->list)->first();
+
+            if (!$user) {
+                return back()->withErrors('Pengguna yang dipilih tidak ditemukan.')->withInput();
+            }
+
+            // Initialize
+            $fileData = request()->file('files');
+            $paths    = [];
+
+            foreach ($fileData as $file) {
+                // Upload
+                $path = env('SITE_URL') . '/storage/' . $file->store('uploads/content', 'public');
+
+                array_push($paths, $path);
+            }
+
+            // Create Content
+            $content = Konten::create([
+                'caption'           => $request->caption,
+                'app'               => $user->app,
+                'status_posting'    => 'Menunggu',
+                'status_post'       => $request->schedule,
+                'date_jadwal'       => ($request->schedule == 'Terjadwal') ?  $request->tanggal . " " . $request->waktu : null,
+                'post_type'         => ($request->post_type) ? $request->post_type : 1
+            ]);
+
+            // Create Content Media
+            AccountKontens::create([
+                'account_id'    => $user->id,
+                'konten_id'     => $content->id,
+                'path'          => $paths
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        $implode = implode(',', $request->list);
-
-        if ($request->tanggal && $request->waktu) {
-            $date_jadwal = $request->tanggal . " " . $request->waktu;
-        } else {
-            $date_jadwal = null;
-        }
-
-        Konten::create([
-            'caption' => $request->caption,
-            'image' => $image_name,
-            'app' => $implode,
-            'url' => null,
-            'date_jadwal' => $date_jadwal ?? null,
-            'status_post' => $date_jadwal != null ? 'Terjadwal' : 'Instan',
-            'status_posting' => $date_jadwal != null ? 'Menunggu' : 'Berhasil'
-        ]);
-
-        if ($implode == 'instagram') {
-            // $this->postToInstagram($user->token, url('images/' . $image_name), $request->caption);
-        } else if ($implode == 'twitter') {
-            // $this->postToTwitter($request->access_token, $request->caption);
-        }
+        // if ($implode == 'instagram') {
+        //     // $this->postToInstagram($user->token, url('images/' . $image_name), $request->caption);
+        // } else if ($implode == 'twitter') {
+        //     // $this->postToTwitter($request->access_token, $request->caption);
+        // }
 
         return redirect()->route('konten.index')->withSuccess('Berhasil menambahkan data.');
     }
 
-    public function postToInstagram($accessToken, $imageUrl, $caption)
+    // public function postToInstagram($accessToken, $imageUrl, $caption)
+    // {
+    //     $fb = new Facebook([
+    //         'app_id' => env('FACEBOOK_APP_ID'),
+    //         'app_secret' => env('FACEBOOK_APP_SECRET'),
+    //         'default_graph_version' => 'v12.0',
+    //     ]);
+
+    //     try {
+    //         $response = $fb->post('/me/media', [
+    //             'image_url' => $imageUrl,
+    //             'caption' => $caption,
+    //         ], $accessToken);
+
+    //         $mediaId = $response->getGraphNode()['id'];
+
+    //         // Publish the media
+    //         $fb->post('/me/media_publish', [
+    //             'creation_id' => $mediaId,
+    //         ], $accessToken);
+    //     } catch (FacebookResponseException $e) {
+    //         // Handle error
+
+    //         dd($e);
+    //     } catch (FacebookSDKException $e) {
+    //         // Handle error
+    //         dd($e);
+    //     }
+    // }
+
+    public function postContent(Request $request)
     {
-        $fb = new Facebook([
-            'app_id' => env('FACEBOOK_APP_ID'),
-            'app_secret' => env('FACEBOOK_APP_SECRET'),
-            'default_graph_version' => 'v12.0',
-        ]);
+        // Check Data
+        $content = Konten::with('accountKontens', 'accountKontens.account')->where('id', $request->id)->first();
 
-        try {
-            $response = $fb->post('/me/media', [
-                'image_url' => $imageUrl,
-                'caption' => $caption,
-            ], $accessToken);
+        if (!$content) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Data konten tidak ditemukan.'
+            ], 404);
+        }
 
-            $mediaId = $response->getGraphNode()['id'];
+        if ($content->app == 'Instagram') {
+            // Check Type
+            if ($content->post_type == 1) { // Single
+                foreach ($content->accountKontens as $account) {
+                    // Initialize
+                    $instagramId = $account->account->fieldsInstagram->instagram_id;
+                    $token       = $account->account->token;
+                    $path        = $account->path[0];
+                    $body        = [
+                        'image_url'     => $path,
+                        'access_token'  => $token,
+                        'caption'       => $content->caption
+                    ];
 
-            // Publish the media
-            $fb->post('/me/media_publish', [
-                'creation_id' => $mediaId,
-            ], $accessToken);
-        } catch (FacebookResponseException $e) {
-            // Handle error
+                    $container = $this->createContainer($instagramId, $body);
 
-            dd($e);
-        } catch (FacebookSDKException $e) {
-            // Handle error
-            dd($e);
+                    if ($container['status']) {
+                        // Initialize
+                        $body = [
+                            'creation_id'   => $container['data']['id'],
+                            'access_token'  => $token
+                        ];
+
+                        $data = $this->postInstagram($instagramId, $body);
+
+                        if ($data['status']) {
+                            return response()->json([
+                                'status'    => true,
+                                'message'   => 'Koten berhasil dipublish.'
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal melakukan Publish.'
+                            ], 200);
+                        }
+                    } else {
+                        if (!$container['status']) {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal membuat Kontainer.'
+                            ], 200);
+                        }
+                    }
+                }
+            } elseif ($content->post_type == 2) { // Carousel
+                // Initialize
+                $accounts    = $content->accountKontens;
+                $containerId = [];
+
+                foreach ($accounts as $account) {
+                    // Token
+                    $token       = $account->account->token;
+                    $instagramId = $account->account->fieldsInstagram->instagram_id;
+
+                    foreach ($account->path as $path) {
+                        // Create Container
+                        $body = [
+                            'image_url'         => $path,
+                            'is_carousel_item'  => true,
+                            'access_token'      => $token
+                        ];
+
+                        $container = $this->createContainer($instagramId, $body);
+
+                        if ($container['status']) {
+                            array_push($containerId, $container['data']['id']);
+                        } else {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal membuat kontainer.'
+                            ], 400);
+                        }
+                    }
+
+                    // Create Container Carousel
+                    $body = [
+                        'caption'       => $content->caption,
+                        'media_type'    => 'CAROUSEL',
+                        'children'      => implode(',', $containerId),
+                        'access_token'  => $token
+                    ];
+
+                    $containerCarousel = $this->createContainer($instagramId, $body);
+
+                    if ($containerCarousel['status']) {
+                        // Initialize
+                        $body = [
+                            'creation_id'   => $containerCarousel['data']['id'],
+                            'access_token'  => $token
+                        ];
+
+                        $data = $this->postInstagram($instagramId, $body);
+
+                        if ($data['status']) {
+                            return response()->json([
+                                'status'    => true,
+                                'message'   => 'Koten berhasil dipublish.'
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal melakukan Publish.'
+                            ], 200);
+                        }
+                    }
+                }
+            }
+
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Konten gagal dipublish.'
+            ], 400);
+        }
+
+        return response()->json([
+            'status'    => false,
+            'message'   => 'Dalam Pengembangan.'
+        ], 200);
+    }
+
+    private function createContainer($instagramId, $body)
+    {
+        // Initialize
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post('https://graph.instagram.com/v20.0/' . $instagramId . '/media', $body);
+
+        // Response dari Instagram API
+        $results = $response->json();
+
+        if ($response->successful()) {
+            return [
+                'status'    => true,
+                'message'   => 'Berhasil membuat data kontainer.',
+                'data'      => $results
+            ];
+        } else {
+            return [
+                'status'    => false,
+                'message'   => 'Gagal membuat data kontainer.'
+            ];
+        }
+    }
+
+    private function postInstagram($instagramId, $body)
+    {
+        // Initialize
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post('https://graph.instagram.com/v20.0/' . $instagramId . '/media_publish', $body);
+
+        // Response dari Instagram API
+        $results = $response->json();
+
+        if ($response->successful()) {
+            return [
+                'status'    => true,
+                'message'   => 'Berhasil membuat data posting.',
+                'data'      => $results
+            ];
+        } else {
+            return [
+                'status'    => false,
+                'message'   => 'Gagal membuat data posting.'
+            ];
         }
     }
 }

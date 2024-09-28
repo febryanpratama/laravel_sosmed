@@ -9,8 +9,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<link rel="icon" href="{{ asset('') }}assets/icons/logo.png">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
+	<link rel="icon" href="{{ asset('') }}assets/icons/logo.png">
 	<title>Dashboard</title>
 
 	<!-- Vendors Style-->
@@ -32,6 +33,7 @@
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-success ">
+	<input type="hidden" id="endpoint" value="{{ env('APP_URL') }}">
 
 	<div class="wrapper">
 		<div id="loader"></div>
@@ -439,6 +441,11 @@
 				input.click();
 			}
 		})
+	</script>
+
+	<!-- Global Var -->
+	<script>
+		const endpoint = $('#endpoint').val()
 	</script>
 
 	@yield('scripts')

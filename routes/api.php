@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\TwitterController;
 use App\Http\Controllers\Api\CallbackController;
 use App\Http\Controllers\Api\WebhooksMetaController;
+use App\Http\Controllers\KontenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 // Callback
 Route::get('callback', [CallbackController::class, 'index']);
@@ -27,3 +29,7 @@ Route::get('twitter', [TwitterController::class, 'indexgetTweet']);
 
 // Webhooks META
 Route::get('request/webhooks', [WebhooksMetaController::class, 'store']);
+
+// Accounts
+Route::get('accounts', [AccountController::class, 'index']);
+Route::get('post-content', [KontenController::class, 'postContent']);

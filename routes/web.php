@@ -77,5 +77,4 @@ Route::middleware('checksession')->group(function () {
     });
 });
 
-
 Route::get('logout', [AuthController::class, 'logout']);
