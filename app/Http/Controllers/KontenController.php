@@ -60,9 +60,13 @@ class KontenController extends Controller
 
             foreach ($fileData as $file) {
                 // Upload
-                $path = env('SITE_URL') . '/storage/' . $file->store('uploads/content', 'public');
+                $extension  = $file->getClientOriginalExtension();
+                $path       = env('SITE_URL') . '/storage/' . $file->store('uploads/content', 'public');
 
-                array_push($paths, $path);
+                array_push($paths, [
+                    'path'      => $path,
+                    'extension' => $extension
+                ]);
             }
 
             // Create Content
@@ -141,13 +145,17 @@ class KontenController extends Controller
         }
 
         if ($content->app == 'Instagram') {
+            /*
+                Docs : https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/content-publishing
+            */
+
             // Check Type
             if ($content->post_type == 1) { // Single
                 foreach ($content->accountKontens as $account) {
                     // Initialize
                     $instagramId = $account->account->fieldsInstagram->instagram_id;
                     $token       = $account->account->token;
-                    $path        = $account->path[0];
+                    $path        = $account->path[0]['path'];
                     $body        = [
                         'image_url'     => $path,
                         'access_token'  => $token,
@@ -196,12 +204,22 @@ class KontenController extends Controller
                     $instagramId = $account->account->fieldsInstagram->instagram_id;
 
                     foreach ($account->path as $path) {
-                        // Create Container
-                        $body = [
-                            'image_url'         => $path,
-                            'is_carousel_item'  => true,
-                            'access_token'      => $token
-                        ];
+                        if ($path['extension'] == 'jpeg' || $path['extension'] == 'jpg') {
+                            // Create Container
+                            $body = [
+                                'image_url'         => $path['path'],
+                                'is_carousel_item'  => true,
+                                'access_token'      => $token
+                            ];
+                        } else {
+                            // Create Container
+                            $body = [
+                                'media_type'        => 'VIDEO',
+                                'video_url'         => $path['path'],
+                                'is_carousel_item'  => true,
+                                'access_token'      => $token
+                            ];
+                        }
 
                         $container = $this->createContainer($instagramId, $body);
 
@@ -243,6 +261,54 @@ class KontenController extends Controller
                             return response()->json([
                                 'status'    => false,
                                 'message'   => 'Gagal melakukan Publish.'
+                            ], 200);
+                        }
+                    }
+                }
+            } else { // Reels
+                foreach ($content->accountKontens as $account) {
+                    // Initialize
+                    $instagramId = $account->account->fieldsInstagram->instagram_id;
+                    $token       = $account->account->token;
+                    $path        = $account->path[0]['path'];
+
+                    $body        = [
+                        'media_type'    => 'REELS',
+                        'video_url'     => $path,
+                        'cover_url'     => $account->path[0]['thumbnail'],
+                        'access_token'  => $token,
+                        'caption'       => $content->caption
+                    ];
+
+                    $container = $this->createContainer($instagramId, $body);
+
+                    if ($container['status']) {
+                        // Initialize
+                        $body = [
+                            'creation_id'   => $container['data']['id'],
+                            'access_token'  => $token
+                        ];
+
+                        dd($container, $body);
+
+                        $data = $this->postInstagram($instagramId, $body);
+
+                        if ($data['status']) {
+                            return response()->json([
+                                'status'    => true,
+                                'message'   => 'Koten berhasil dipublish.'
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal melakukan Publish.'
+                            ], 200);
+                        }
+                    } else {
+                        if (!$container['status']) {
+                            return response()->json([
+                                'status'    => false,
+                                'message'   => 'Gagal membuat Kontainer.'
                             ], 200);
                         }
                     }
