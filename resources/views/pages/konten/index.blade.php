@@ -45,9 +45,11 @@
                                                 <td>{{ ($item->date_jadwal) ? date('d F Y H:i', strtotime($item->date_jadwal)) : '-' }}</td>
                                                 <td><span class="badge {{ ($item->status_posting == 'Berhasil') ? 'badge-success' : 'badge-info' }}">{{ $item->status_posting }}</span></td>
                                                 <td>
-                                                    <a href="#" onclick="postContent({{ $item->id }})" id="now-post" data-id="{{ $item->id }}" class="btn btn-sm btn-primary">Posting Sekarang</a>
-                                                    <a href="" class="btn btn-sm btn-warning">Edit</a>
-                                                    <a href="" class="btn btn-sm btn-danger">Hapus</a>
+                                                    @if($item->status_posting == 'Menunggu')
+                                                    <button onclick="postContent({{ $item->id }})" id="now-post-{{ $item->id }}" data-id="{{ $item->id }}" class="btn btn-sm btn-primary">Posting Sekarang</button>
+                                                    @endif
+                                                    <!-- <a href="" class="btn btn-sm btn-warning">Edit</a> -->
+                                                    <!-- <a href="" class="btn btn-sm btn-danger">Hapus</a> -->
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -68,11 +70,42 @@
 <script>
     // POST
     function postContent(id) {
+        // Disabled Btn
+        $(`#now-post-${id}`).attr('disabled', true)
+
         $.ajax({
             url: `${endpoint}/api/post-content?id=${id}`,
             type: "GET",
             success: function(response) {
-                console.log(response)
+                if (response.status) {
+                    $(`#now-post-${id}`).attr('disabled', false)
+
+                    $.toast({
+                        heading: 'Sukses!',
+                        text: `${response.message}`,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'success',
+                        hideAfter: 3500,
+                        stack: 6
+                    });
+
+                    setTimeout(() => {
+                        window.location.reload(true)
+                    }, 1000)
+                } else {
+                    $(`#now-post-${id}`).attr('disabled', false)
+
+                    $.toast({
+                        heading: 'Error!',
+                        text: `${response.message}`,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'error',
+                        hideAfter: 3500,
+                        stack: 6
+                    });
+                }
             }
         });
     }

@@ -19,7 +19,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <!-- <form action="javascript:void(0);" method="POST" enctype="multipart/form-data"> -->
                             <form action="{{ route('konten.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
@@ -66,7 +65,7 @@
 
                                     <div class="form-group" id="row-file">
                                         <label for="" class="control-label">Media (Foto/Video) <span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control" name="files[]" multiple required>
+                                        <input type="file" class="form-control" name="files[]" multiple required accept=".mp4, .jpg">
                                     </div>
 
                                     <div class="form-group" id="row-list-post-type">

@@ -174,6 +174,11 @@ class KontenController extends Controller
                         $data = $this->postInstagram($instagramId, $body);
 
                         if ($data['status']) {
+                            // Update Data
+                            $content->update([
+                                'status_posting' => 'Berhasil'
+                            ]);
+
                             return response()->json([
                                 'status'    => true,
                                 'message'   => 'Koten berhasil dipublish.'
@@ -220,7 +225,6 @@ class KontenController extends Controller
                                 'access_token'      => $token
                             ];
                         }
-
                         $container = $this->createContainer($instagramId, $body);
 
                         if ($container['status']) {
@@ -228,7 +232,8 @@ class KontenController extends Controller
                         } else {
                             return response()->json([
                                 'status'    => false,
-                                'message'   => 'Gagal membuat kontainer.'
+                                'message'   => 'Gagal membuat kontainer.',
+                                'error'     => $container['data']
                             ], 400);
                         }
                     }
@@ -253,6 +258,11 @@ class KontenController extends Controller
                         $data = $this->postInstagram($instagramId, $body);
 
                         if ($data['status']) {
+                            // Update Data
+                            $content->update([
+                                'status_posting' => 'Berhasil'
+                            ]);
+
                             return response()->json([
                                 'status'    => true,
                                 'message'   => 'Koten berhasil dipublish.'
@@ -289,11 +299,14 @@ class KontenController extends Controller
                             'access_token'  => $token
                         ];
 
-                        dd($container, $body);
-
                         $data = $this->postInstagram($instagramId, $body);
 
                         if ($data['status']) {
+                            // Update Data
+                            $content->update([
+                                'status_posting' => 'Berhasil'
+                            ]);
+
                             return response()->json([
                                 'status'    => true,
                                 'message'   => 'Koten berhasil dipublish.'
@@ -346,7 +359,8 @@ class KontenController extends Controller
         } else {
             return [
                 'status'    => false,
-                'message'   => 'Gagal membuat data kontainer.'
+                'message'   => 'Gagal membuat data kontainer.',
+                'data'      => $response->json()
             ];
         }
     }
