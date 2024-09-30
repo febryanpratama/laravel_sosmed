@@ -38,8 +38,8 @@
                                         <th scope="row">{{ $key+1 }}</th>
                                         <td>{{ $item['whatsapp_number'] }}</td>
                                         <td>{{ $item['country_code'] }}</td>
-                                        <td>{{ $item['message'] }}</td>
-                                        <td>{{ $item['status'] }}</td>
+                                        <td>{{ substr($item['message'], 0, 40) }}</td>
+                                        <td>{{ ($item['status']) ? 'Dikirim' : 'Dalam Antrean' }}</td>
                                         <td>{{ ($item['send_date']) ? $item['send_date'] : '-' }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center">
