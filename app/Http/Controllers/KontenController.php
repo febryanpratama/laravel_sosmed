@@ -61,7 +61,7 @@ class KontenController extends Controller
             foreach ($fileData as $file) {
                 // Upload
                 $extension  = $file->getClientOriginalExtension();
-                $path       = env('SITE_URL') . '/storage/' . $file->store('uploads/content', 'public');
+                $path       = env('APP_URL') . '/storage/' . $file->store('uploads/content', 'public');
 
                 array_push($paths, [
                     'path'      => $path,
