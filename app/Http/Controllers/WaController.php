@@ -29,16 +29,14 @@ class WaController extends Controller
         return view('pages.broadcast.wa.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request) {}
+
+    public function downloadTemplate(Request $request)
     {
         // Initialize
-        // $response = $this->waServices->storeWa([
-        //     'message'   => $request->message,
-        //     'file'      => $request->file
-        // ]);
+        $media = 'File WhatsApp Blast.xlsx';
+        $myFile = public_path($media);
 
-        // dd($response);
-
-
+        return response()->download($myFile);
     }
 }

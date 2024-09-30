@@ -24,14 +24,12 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Whatsapp Number</th>
-                                        <th scope="col">Country Number</th>
-                                        <th scope="col">Message</th>
+                                        <th scope="col">Nomor WhatsApp</th>
+                                        <th scope="col">Kode Negara</th>
+                                        <th scope="col">Pesan</th>
                                         <th scope="col">Status</th>
-                                        {{-- <th scope="col"></th> --}}
-                                        <th scope="col">Send Date</th>
-                                        {{-- <th scope="col">Sender</th> --}}
-                                        <th scope="col">Action</th>
+                                        <th scope="col">Tanggal Dikirim</th>
+                                        <th scope="col">Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,11 +40,11 @@
                                         <td>{{ $item['country_code'] }}</td>
                                         <td>{{ $item['message'] }}</td>
                                         <td>{{ $item['status'] }}</td>
-                                        <td>{{ $item['send_date'] }}</td>
+                                        <td>{{ ($item['send_date']) ? $item['send_date'] : '-' }}</td>
                                         <td>
                                             <div class="d-flex justify-content-center">
-                                                <a class="btn btn-warning btn-sm" style="margin-right: 10px;">Update</a>
-                                                <a class="btn btn-danger btn-sm">Delete</a>
+                                                <a class="btn btn-warning btn-sm" style="margin-right: 10px;">Edit</a>
+                                                <a class="btn btn-danger btn-sm">Hapus</a>
                                             </div>
                                         </td>
                                     </tr>

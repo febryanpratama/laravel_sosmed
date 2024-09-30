@@ -12,7 +12,7 @@
                                 <h3 class="box-title">Tambah Data</h3>
                             </div>
                             <div>
-                                <a href="https://indonesiacore.com/admin/whatsapp-blast/download/file" target="_blank" class=" btn btn-info btn-sm">
+                                <a href="{{ route('wa.template') }}" target="_blank" class=" btn btn-info btn-sm">
                                     Download Template
                                 </a>
                             </div>
@@ -26,7 +26,7 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="message">Pesan <span class="text-danger">*</span></label>
-                                        <textarea type="text" class="form-control" id="message" name="message" placeholder="Masukkan Pesan" rows="4"></textarea>
+                                        <textarea type="text" class="form-control" id="message" name="message" placeholder="Masukkan Pesan" rows="10"></textarea>
                                     </div>
 
                                     <div class="form-group">
@@ -50,7 +50,7 @@
                                         </div>
                                     </div> -->
 
-                                    <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                                    <button type="submit" class="btn btn-sm btn-primary" id="save">Simpan</button>
                                 </form>
                             </div>
                         </div>
@@ -67,28 +67,29 @@
 
         // Ambil data dari form
         let formData = new FormData(this);
+        $('#save').attr('disabled', true)
 
         try {
-            // Kirim form menggunakan fetch
             let response = await fetch('https://indonesiacore.com/api/whatsapp-blast/store', {
                 method: 'POST',
                 body: formData
             });
 
-            // Parsing JSON dari respons
             let result = await response.json();
 
             // Jika status sukses, redirect ke halaman sebelumnya atau yang diinginkan
             if (result.status === 'success') {
-                alert(result.message); // Menampilkan pesan sukses
+                alert(result.message);
 
-                // window.history.back(); // Kembali ke halaman sebelumnya
                 window.location = "broadcast/whatsapp-blast"
             } else {
                 alert('Gagal menambahkan data');
             }
 
+            $('#save').attr('disabled', true)
         } catch (error) {
+            $('#save').attr('disabled', false)
+
             console.error('Error:', error);
         }
     });
