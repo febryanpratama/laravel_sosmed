@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\TwitterController;
 use App\Http\Controllers\Api\CallbackController;
 use App\Http\Controllers\Api\WebhooksMetaController;
 use App\Http\Controllers\KontenController;
+use App\Http\Controllers\v2\WhatsAppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +34,6 @@ Route::get('request/webhooks', [WebhooksMetaController::class, 'store']);
 // Accounts
 Route::get('accounts', [AccountController::class, 'index']);
 Route::get('post-content', [KontenController::class, 'postContent']);
+Route::get('post-wa-message/{id}', [WhatsAppController::class, 'postMessage']);
+Route::get('delete-message/{id}', [WhatsAppController::class, 'destroy']);
+

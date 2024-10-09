@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\KontenController;
-use App\Http\Controllers\WaController;
+use App\Http\Controllers\V2\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,10 +62,17 @@ Route::middleware('checksession')->group(function () {
 
         // Whatsapp Controller
         Route::prefix('whatsapp-blast')->group(function () {
-            Route::get('/', [WaController::class, 'index']);
-            Route::get('/create', [WaController::class, 'create']);
-            Route::get('/download/template-wa', [WaController::class, 'downloadTemplate'])->name('wa.template');
-            Route::post('/store', [WaController::class, 'store'])->name('wa.store');
+            Route::prefix('v2')->group(function () {
+                Route::get('/', [WhatsAppController::class, 'index'])->name('wa_blast');
+                Route::get('create', [WhatsAppController::class, 'create'])->name('wa_blast.create');
+                Route::post('store', [WhatsAppController::class, 'store'])->name('wa_blast.store');
+                Route::get('download/template', [WhatsAppController::class, 'downloadTemplate'])->name('wa_blast.template');
+            });
+
+            // Route::get('/', [WaController::class, 'index']);
+            // Route::get('/create', [WaController::class, 'create']);
+            // Route::get('/download/template-wa', [WaController::class, 'downloadTemplate'])->name('wa.template');
+            // Route::post('/store', [WaController::class, 'store'])->name('wa.store');
         });
     });
 

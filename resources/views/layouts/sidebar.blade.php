@@ -29,7 +29,7 @@
 						</a>
 						<ul class="treeview-menu">
 							<li><a href="{{ url('broadcast/email') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Email</a></li>
-							<li><a href="{{ url('broadcast/whatsapp-blast') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>WhatsApp</a></li>
+							<li><a href="{{ route('wa_blast') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>WhatsApp</a></li>
 						</ul>
 					</li>
 					<li>

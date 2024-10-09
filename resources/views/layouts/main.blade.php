@@ -341,8 +341,6 @@
 	<!-- <script src="{{ asset('') }}assets/vendor_components/date-paginator/moment.min.js"></script> -->
 	<!-- <script src="{{ asset('') }}assets/vendor_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script> -->
 	<!-- <script src="{{ asset('') }}assets/vendor_components/date-paginator/bootstrap-datepaginator.min.js"></script> -->
-	{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-
 
 	<!-- Rhythm Admin App -->
 	<script src="{{ asset('') }}assets/js/template.js"></script>
