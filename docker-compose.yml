@@ -1,0 +1,45 @@
+version: "3.8" # Version YAML
+
+services:
+  app_digimar:
+    container_name: app_digimar
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www
+    networks:
+      - root_connection
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5" # Maksimum 50% dari satu core CPU
+          memory: 512M # Maksimum 512MB RAM
+        reservations:
+          cpus: "0.25" # Minimal 25% dari satu core CPU
+          memory: 256M # Minimal 256MB RAM
+
+  nginx_digimar:
+    container_name: nginx_digimar
+    image: nginx:alpine
+    volumes:
+      - .:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8002:80"
+    depends_on:
+      - app_digimar
+    networks:
+      - root_connection
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3" # Maksimum 30% dari satu core CPU
+          memory: 256M # Maksimum 256MB RAM
+        reservations:
+          cpus: "0.1" # Minimal 10% dari satu core CPU
+          memory: 128M # Minimal 128MB RAM
+
+networks:
+  root_connection:
+    external: true
